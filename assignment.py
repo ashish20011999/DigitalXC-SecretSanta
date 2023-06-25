@@ -7,6 +7,26 @@ class Assignment:
         self.previous_assignments_file = previous_assignments_file
         self.output_file = output_file
 
+    def custom_shuffle(self,lst):
+        n = len(lst)
+        for i in range(n - 1, 0, -1):
+            j = random.randint(0, i)
+            lst[i], lst[j] = lst[j], lst[i]
+        return lst
+
+    def get_random_index(self,length, current_index):
+        if length <= 1:
+            raise IndexError("List length is insufficient to generate a different index.")
+        
+        index_list = list(range(length))
+        index_list.remove(current_index)
+        
+        if len(index_list) == 0:
+            raise IndexError("No available indices to select from.")
+        
+        random_index = random.sample(index_list, 1)[0]
+        return random_index
+    
     def load_employee_info(self):
         employee_info = []
         try:
@@ -37,12 +57,12 @@ class Assignment:
 
     def assign_secret_children(self, employee_info, previous_assignments):
         employees = employee_info.copy()
-        random.shuffle(employees)  # Shuffle the list of employees
+        self.custom_shuffle(employees)  # Shuffle the list of employees
 
         assignments = []
         for i in range(len(employees)):
             employee = employees[i]
-            secret_child = employees[(i+1) % len(employees)]  # Assign next employee as secret child
+            secret_child = employees[self.get_random_index(len(employees),i)]  # Assign next employee as secret child
 
             # Check if employee and secret child are the same or were paired in previous year
             while (employee['Employee_EmailID'] == secret_child['Employee_EmailID'] or
@@ -51,8 +71,8 @@ class Assignment:
                        (pa['Employee_EmailID'] == secret_child['Employee_EmailID'] and
                         pa['Secret_Child_EmailID'] == employee['Employee_EmailID'])
                        for pa in previous_assignments)):
-                random.shuffle(employees)  # Reshuffle the list of employees
-                secret_child = employees[(i+1) % len(employees)]  # Assign next employee as secret child
+                self.custom_shuffle(employees)  # Reshuffle the list of employees
+                secret_child = employees[self.get_random_index(len(employees),i)]  # Assign next employee as secret child
 
             assignment = {
                 'Employee_Name': employee['Employee_Name'],
