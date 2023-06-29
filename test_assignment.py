@@ -54,7 +54,7 @@ class AssignmentTestCase(unittest.TestCase):
 
         try:
             game.load_previous_assignments()
-            game.load_previous_assignments()
+            game.load_employee_info()
         except FileNotFoundError:
             self.fail("File not found containing the employee details/ previous secret children assignment")
 
@@ -67,7 +67,7 @@ class AssignmentTestCase(unittest.TestCase):
 
         try:
             game.load_previous_assignments()
-            game.load_previous_assignments()
+            game.load_employee_info()
         except PermissionError:
             self.fail("Access denied to file containing the employee details/ previous secret children assignment")
 
